@@ -23,7 +23,7 @@ class DBTransaction(object):
             try:
                 self.conn.commit()
                 self.conn.close()
-                print('save DBTransaction')
+                print('save')
             except psycopg2.InterfaceError:
                 pass
 
@@ -32,7 +32,7 @@ class DBTransaction(object):
             try:
                 self.conn.rollback()
                 self.conn.close()
-                print('cancel DBTransaction')
+                print('cancel')
             except psycopg2.InterfaceError:
                 pass
 
