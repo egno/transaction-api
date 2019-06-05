@@ -20,12 +20,28 @@ class DBTransaction(object):
 
     def close(self):
         if not self.conn is None:
-            self.conn.close()
+            try:
+                self.conn.commit()
+                self.conn.close()
+                print('save DBTransaction')
+            except psycopg2.InterfaceError:
+                pass
+
+    def cancel(self):
+        if not self.conn is None:
+            try:
+                self.conn.rollback()
+                self.conn.close()
+                print('cancel DBTransaction')
+            except psycopg2.InterfaceError:
+                pass
+
 
     def connect(self):
         if self.conn is None:
             self.conn = psycopg2.connect(host=DB_CONFIG['PGHOST'], dbname=DB_CONFIG['PGDATABASE'],
                                          user=DB_CONFIG['PGUSER'], password=DB_CONFIG['PGPASSWORD'])
+            # print('open DBTransaction')
 
     def get(self, sql, params=(None,), all=False):
         with self.conn.cursor(cursor_factory=DictCursor) as cursor:
