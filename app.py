@@ -6,6 +6,8 @@ import json
 import db
 from config import CONFIG as config
 import logging
+import operation
+import query
 
 app = Flask(__name__)
 CORS(app)
@@ -24,9 +26,9 @@ def post_transaction():
     if data is None:
         raise ValueError("Transaction was not created")
 
-    transaction_id = db.send_transaction(
-        data
-    )['id']
+    transaction_id = operation.do(**data)['id']
+
+
     app.logger.info(f'Transaction: {transaction_id}')
 
     if transaction_id == None:
@@ -37,8 +39,9 @@ def post_transaction():
 
 @app.route('/balance/<business_id>', methods=['GET'])
 def balance(business_id):
+    res = query.do(type='CustomerAccountBalance', business=business_id)
     try:
-        return json.dumps({'response': ''})
+        return json.dumps({'response': res})
     except Exception as e:
         return json.dumps({'error': "{0}".format(e)})
 

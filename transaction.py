@@ -35,7 +35,7 @@ values (%s, %s, %s, %s)
 returning *
 ''', (str(self.id), entry.account, entry.amount, json.dumps(entry.analytics),))
             )
-        return res[0]['id']
+        return res[0]
 
     def entry(self, account, amount, analytics):
         entry = Entry(account=account, amount=amount, analytics=analytics)
