@@ -1,5 +1,5 @@
 from requests import post, get
-from flask import Flask, request
+from flask import Flask, request, make_response
 from flask_cors import CORS
 import re
 import json
@@ -37,22 +37,23 @@ def post_transaction():
 
     transaction = operation.do(**data)
 
-    app.logger.info(f'Transaction: {transaction}')
+    app.logger.info(f'Transaction: {transaction}', type(transaction))
 
-    if transaction['id'] == None:
-        raise ValueError("Transaction was not created")
+    if transaction.get('id','') == '':
+        return make_response(json.dumps({'error': "Transaction was not created", 'details': transaction}), 400, {'Content-Type': 'application/json'})
+
 
     print(type(transaction))
-    return json.dumps({'transaction': transaction}, default=json_serial)
+    return make_response(json.dumps({'transaction': transaction}, default=json_serial), 200, {'Content-Type': 'application/json'})
 
 
 @app.route('/balance/<business_id>', methods=['GET'])
 def balance(business_id):
     res = query.do(type='CustomerAccountBalance', business=business_id)
     try:
-        return json.dumps({'response': res}, default=json_serial)
+        return make_response(json.dumps({'response': res}, default=json_serial), 200, {'Content-Type':'application/json'})
     except Exception as e:
-        return json.dumps({'error': "{0}".format(e)})
+        return make_response(json.dumps({'error': "{0}".format(e)}), 400, {'Content-Type': 'application/json'})
 
 
 if __name__ == "__main__":
