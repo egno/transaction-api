@@ -1,5 +1,5 @@
 import psycopg2
-from psycopg2.extras import DictCursor
+from psycopg2.extras import RealDictCursor
 import json
 from config import CONFIG as config
 
@@ -36,7 +36,6 @@ class DBTransaction(object):
             except psycopg2.InterfaceError:
                 pass
 
-
     def connect(self):
         if self.conn is None:
             self.conn = psycopg2.connect(host=DB_CONFIG['PGHOST'], dbname=DB_CONFIG['PGDATABASE'],
@@ -44,7 +43,7 @@ class DBTransaction(object):
             # print('open DBTransaction')
 
     def get(self, sql, params=(None,), all=False):
-        with self.conn.cursor(cursor_factory=DictCursor) as cursor:
+        with self.conn.cursor(cursor_factory=RealDictCursor) as cursor:
             cursor.execute(sql, params)
             if all:
                 return cursor.fetchall()
