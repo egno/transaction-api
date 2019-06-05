@@ -47,11 +47,11 @@ def post_transaction():
     return make_response(json.dumps({'transaction': transaction}, default=json_serial), 200, {'Content-Type': 'application/json'})
 
 
-@app.route('/balance/<business_id>', methods=['GET'])
+@app.route('/account/<business_id>', methods=['GET'])
 def balance(business_id):
     res = query.do(type='CustomerAccountBalance', business=business_id)
     try:
-        return make_response(json.dumps({'response': res}, default=json_serial), 200, {'Content-Type':'application/json'})
+        return make_response(json.dumps(res, default=json_serial), 200, {'Content-Type':'application/json'})
     except Exception as e:
         return make_response(json.dumps({'error': "{0}".format(e)}), 400, {'Content-Type': 'application/json'})
 
