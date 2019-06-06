@@ -2,11 +2,13 @@ from transaction import Transaction
 from decimal import Decimal
 
 import operations.SMSReserveSum
+import operations.SMSDelivered
 import operations.CustomerPayment
 
 
 operDict = {
     'SMSReserveSum': operations.SMSReserveSum,
+    'SMSDelivered': operations.SMSDelivered,
     'CustomerPayment': operations.CustomerPayment
 }
 

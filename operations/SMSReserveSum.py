@@ -8,10 +8,10 @@ def do(tr, params):
         {'business': params['business']}])
     if balance - Decimal(params['amount']) < 0:
         tr.cancel()
-        res = {'massage':'Недостаточно суммы на ЛС'}
+        res = {'message':'Недостаточно суммы на ЛС'}
         return(res)
-
-    tr.entry('business', -params['amount'], {
+    tr.postTransaction()
+    tr.postEntry('business', -params['amount'], {
         'business': params['business']})
 
     res = tr.save()

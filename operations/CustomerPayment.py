@@ -4,7 +4,8 @@ from decimal import Decimal
 def do(tr, params):
     tr.data = params
     tr.data['description'] = 'Пополнен баланс ЛС'
-    tr.entry('business', params['amount'], {
+    tr.postTransaction()
+    tr.postEntry(account='business', amount=params['amount'], analytics={
         'business': params['business']})
 
     res = tr.save()

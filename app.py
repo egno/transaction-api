@@ -39,9 +39,8 @@ def post_transaction():
 
     app.logger.info(f'Transaction: {transaction}', type(transaction))
 
-    if transaction.get('id','') == '':
+    if transaction is None or transaction.get('id', '') == '':
         return make_response(json.dumps({'error': "Transaction was not created", 'details': transaction}), 400, {'Content-Type': 'application/json'})
-
 
     print(type(transaction))
     return make_response(json.dumps({'transaction': transaction}, default=json_serial), 200, {'Content-Type': 'application/json'})
@@ -51,7 +50,7 @@ def post_transaction():
 def balance(business_id):
     res = query.do(type='CustomerAccountBalance', business=business_id)
     try:
-        return make_response(json.dumps(res, default=json_serial), 200, {'Content-Type':'application/json'})
+        return make_response(json.dumps(res, default=json_serial), 200, {'Content-Type': 'application/json'})
     except Exception as e:
         return make_response(json.dumps({'error': "{0}".format(e)}), 400, {'Content-Type': 'application/json'})
 

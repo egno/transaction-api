@@ -21,20 +21,21 @@ class DBTransaction(object):
     def close(self):
         if not self.conn is None:
             try:
+                self.conn.rollback()
+                self.conn.close()
+                print('cancel')
+            except psycopg2.InterfaceError:
+                pass
+    
+    def save(self):
+        if not self.conn is None:
+            try:
                 self.conn.commit()
                 self.conn.close()
                 print('save')
             except psycopg2.InterfaceError:
                 pass
 
-    def cancel(self):
-        if not self.conn is None:
-            try:
-                self.conn.rollback()
-                self.conn.close()
-                print('cancel')
-            except psycopg2.InterfaceError:
-                pass
 
     def connect(self):
         if self.conn is None:
@@ -44,7 +45,7 @@ class DBTransaction(object):
 
     def get(self, sql, params=(None,), all=False):
         with self.conn.cursor(cursor_factory=RealDictCursor) as cursor:
-            cursor.execute(sql, params)
+            cursor.execute(sql, params)            
             if all:
                 return cursor.fetchall()
             else:
