@@ -8,12 +8,13 @@ def do(tr, params):
         {'business': params['business']}])
     if balance - Decimal(params['amount']) < 0:
         tr.cancel()
-        res = {'message':'Недостаточно суммы на ЛС'}
+        res = {'message': 'Недостаточно суммы на ЛС'}
         return(res)
     tr.postTransaction()
-    tr.postEntry('business', -params['amount'], {
-        'business': params['business']})
+    tr.postEntry(account='business', amount=-params['amount'],
+                 analytics={'business': params['business']},
+                 data={'description': 'Зарезервирована сумма на отправку SMS'}
+                 )
 
     res = tr.save()
     return(res)
-

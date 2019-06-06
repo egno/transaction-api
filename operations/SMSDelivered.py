@@ -26,7 +26,9 @@ def do(tr, params):
                 print(entry['amount'])
                 tr.postEntry(account=entry['account'],
                              amount=-entry['amount'],
-                             analytics=entry['analytics']
+                             analytics=entry['analytics'],
+                             data={
+                                 'description': 'Возвращена реанее зарезервированная сумма', 'entry': entry['id'], 'transaction': tr.parent}
                              )
 
     balance = tr.accountBalance('business', [
@@ -39,7 +41,8 @@ def do(tr, params):
 
     tr.postEntry(account='business',
                  amount=-params['amount'],
-                 analytics={'business': params['business']})
+                 analytics={'business': params['business']},
+                 data={'description':'Списана сумма за отправленную SMS'})
 
     res = tr.save()
     return(res)
