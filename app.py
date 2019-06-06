@@ -48,6 +48,21 @@ def post_transaction():
     return make_response(json.dumps({'transaction': transaction, 'entries': entries}, default=json_serial), 200, {'Content-Type': 'application/json'})
 
 
+@app.route('/transaction/<transaction_id>/undo', methods=['POST'])
+def undo_transaction(transaction_id):
+
+    data = {'type': 'UndoTransaction', 'transactionId': transaction_id}
+
+    transaction, entries = operation.do(**data)
+
+    app.logger.info(f'Transaction: {transaction}, Entries: {entries}')
+
+    if transaction is None or transaction.get('id', '') == '':
+        return make_response(json.dumps({'error': "Transaction was not created", 'details': transaction}), 400, {'Content-Type': 'application/json'})
+
+    return make_response(json.dumps({'transaction': transaction, 'entries': entries}, default=json_serial), 200, {'Content-Type': 'application/json'})
+
+
 @app.route('/account/<business_id>', methods=['GET'])
 def balance(business_id):
     res = query.do(type='CustomerAccountBalance', business=business_id)
