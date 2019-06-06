@@ -44,5 +44,10 @@ def do(tr, params):
                  analytics={'business': params['business']},
                  data={'description':'Списана сумма за отправленную SMS'})
 
+    tr.postEntry(account='business',
+                 amount=-params.get('unoCommission'),
+                 analytics={'business': params['business']},
+                 data={'description': 'Списана комиссия за услуги SMS'})
+
     res = tr.save()
     return(res)

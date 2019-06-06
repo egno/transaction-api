@@ -56,6 +56,8 @@ returning *
         return self.transaction
 
     def postEntry(self, account, amount, analytics=None, data=None):
+        if amount is None or amount == 0:
+            return
         entry = Entry(account=account, amount=amount,
                       analytics=analytics, data=data)
         return entry.post(self)
