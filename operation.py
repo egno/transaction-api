@@ -8,7 +8,7 @@ import operations.SMSNotDelivered
 
 
 operDict = {
-    'CustomerPayment': operations.CustomerPaymentб
+    'CustomerPayment': operations.CustomerPayment,
     'SMSReserveSum': operations.SMSReserveSum,
     'SMSDelivered': operations.SMSDelivered,
     'SMSNotDelivered': operations.SMSNotDelivered
