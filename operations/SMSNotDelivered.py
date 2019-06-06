@@ -3,11 +3,14 @@ from decimal import Decimal
 
 def do(tr, params):
     tr.data = params
-    tr.data['description'] = 'Списание суммы за доставленную SMS'
+    tr.data['description'] = 'Возврат суммы за недоставленную SMS'
 
     reservedId = params.get('reserveId')
     if reservedId is None:
-        tr.postTransaction()
+        # резервирование не указано. Ошибка
+        tr.cancel()
+        res = {'message': 'Не указана транзакция по резервированию средств'}
+        return(res)
     else:
         # указан ID транзакции по резервированию суммы
         parentTransaction = tr.getTransaction(reservedId)
@@ -30,29 +33,6 @@ def do(tr, params):
                              data={
                                  'description': 'Возвращена ранее зарезервированная сумма', 'entry': entry['id'], 'transaction': tr.parent}
                              )
-
-    balance = tr.accountBalance('business', [
-        {'business': params['business']}
-    ])
-    if balance - Decimal(params['amount']) < 0:
-        tr.cancel()
-        res = {'message': 'Недостаточно суммы на ЛС'}
-        return(res)
-
-    tr.postEntry(account='business',
-                 amount=-params['amount'],
-                 analytics={'business': params['business']},
-                 data={'description':'Списана сумма за отправленную SMS'})
-
-    tr.postEntry(account='business',
-                 amount=-params.get('unoCommission'),
-                 analytics={'business': params['business']},
-                 data={'description': 'Списана комиссия за услуги SMS'})
-
-    tr.postEntry(account='provider',
-                 amount=-params['amount'],
-                 analytics={'provider': params.get('provider')},
-                 data={'description': 'Списана сумма за отправленную SMS'})
 
     res = tr.save()
     return(res)

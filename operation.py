@@ -1,15 +1,17 @@
 from transaction import Transaction
 from decimal import Decimal
 
+import operations.CustomerPayment
 import operations.SMSReserveSum
 import operations.SMSDelivered
-import operations.CustomerPayment
+import operations.SMSNotDelivered
 
 
 operDict = {
+    'CustomerPayment': operations.CustomerPaymentб
     'SMSReserveSum': operations.SMSReserveSum,
     'SMSDelivered': operations.SMSDelivered,
-    'CustomerPayment': operations.CustomerPayment
+    'SMSNotDelivered': operations.SMSNotDelivered
 }
 
 def do(**params):
