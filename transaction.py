@@ -39,7 +39,7 @@ class Transaction(db.DBTransaction):
 
     def save(self):
         super().save()
-        return self.transaction
+        return (self.transaction, self.entries)
 
     def postTransaction(self):
         parent = None
@@ -60,7 +60,9 @@ returning *
             return
         entry = Entry(account=account, amount=amount,
                       analytics=analytics, data=data)
-        return entry.post(self)
+        res = entry.post(self)
+        self.entries.append(res)
+        return res
 
     def accountBalance(self, account, conditions=[]):
         sql, values = ('''

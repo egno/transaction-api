@@ -8,6 +8,7 @@ import logging
 import operation
 import query
 from datetime import date, datetime
+from decimal import Decimal
 
 app = Flask(__name__)
 CORS(app)
@@ -22,6 +23,8 @@ def json_serial(obj):
 
     if isinstance(obj, (datetime, date)):
         return obj.isoformat()
+    if isinstance(obj, (Decimal)):
+        return float(obj)
     raise TypeError("Type %s not serializable" % type(obj))
 
 
@@ -35,15 +38,14 @@ def post_transaction():
     if data is None:
         raise ValueError("Transaction was not created")
 
-    transaction = operation.do(**data)
+    transaction, entries = operation.do(**data)
 
-    app.logger.info(f'Transaction: {transaction}', type(transaction))
+    app.logger.info(f'Transaction: {transaction}, Entries: {entries}')
 
     if transaction is None or transaction.get('id', '') == '':
         return make_response(json.dumps({'error': "Transaction was not created", 'details': transaction}), 400, {'Content-Type': 'application/json'})
 
-    print(type(transaction))
-    return make_response(json.dumps({'transaction': transaction}, default=json_serial), 200, {'Content-Type': 'application/json'})
+    return make_response(json.dumps({'transaction': transaction, 'entries': entries}, default=json_serial), 200, {'Content-Type': 'application/json'})
 
 
 @app.route('/account/<business_id>', methods=['GET'])
