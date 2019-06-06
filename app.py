@@ -48,7 +48,7 @@ def post_transaction():
     return make_response(json.dumps({'transaction': transaction, 'entries': entries}, default=json_serial), 200, {'Content-Type': 'application/json'})
 
 
-@app.route('/transaction/<transaction_id>/undo', methods=['POST'])
+@app.route('/transaction/<transaction_id>', methods=['DELETE'])
 def undo_transaction(transaction_id):
 
     data = {'type': 'UndoTransaction', 'transactionId': transaction_id}
