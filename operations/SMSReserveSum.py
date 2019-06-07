@@ -4,6 +4,7 @@ from decimal import Decimal
 def do(tr, params):
     tr.data = params
     tr.data['description'] = 'Резервирование суммы на отправку SMS'
+    tr.status='waiting'
     balance = tr.accountBalance('business', [
         {'business': params['business']}])
     if balance - Decimal(params['amount']) < 0:

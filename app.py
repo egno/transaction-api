@@ -62,6 +62,20 @@ def undo_transaction(transaction_id):
 
     return make_response(json.dumps({'transaction': transaction, 'entries': entries}, default=json_serial), 200, {'Content-Type': 'application/json'})
 
+@app.route('/clear', methods=['POST'])
+def clear_transactions():
+
+    data = {'type': 'clearWaitingTransactions'}
+
+    res = operation.do(**data)
+
+    print(res)
+
+    app.logger.info(f'Result: {res}')
+
+    return make_response(json.dumps(res, default=json_serial), 200, {'Content-Type': 'application/json'})
+
+
 
 @app.route('/account/<business_id>', methods=['GET'])
 def balance(business_id):

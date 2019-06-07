@@ -28,6 +28,7 @@ class Transaction(db.DBTransaction):
         self.id = uuid4()
         self.data = params.get('data')
         self.parent = params.get('parent')
+        self.status = params.get('status')
         self.entries = []
         self.transaction = None
 
@@ -46,10 +47,10 @@ class Transaction(db.DBTransaction):
         if not self.parent is None:
             parent = str(self.parent)
         self.transaction = self.get('''
-insert into transaction (id, j, parent)
-values (%s, %s, %s)
+insert into transaction (id, j, parent, status)
+values (%s, %s, %s, %s)
 returning *
-''', (str(self.id), json.dumps(self.data), parent))
+''', (str(self.id), json.dumps(self.data), parent, self.status))
 
         if not self.transaction is None and not self.transaction['id'] is None:
             self.id = self.transaction['id']
@@ -94,4 +95,12 @@ select *
 from entry 
 where transaction = %s
 ''', (str(self.parent),), all=True)
+        return res
+
+    def clearWaitingTansactions(self, hours = 48):
+        sql, values = ('''
+SELECT * from public.clear_waiting_transactions(%s);
+''', (hours,))
+        res = self.get(sql, values, all=True)
+        print(res)
         return res

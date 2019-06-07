@@ -6,6 +6,7 @@ import operations.SMSReserveSum
 import operations.SMSDelivered
 import operations.SMSNotDelivered
 import operations.UndoTransaction
+import operations.clearWaitingTransactions
 
 
 operDict = {
@@ -13,7 +14,8 @@ operDict = {
     'SMSReserveSum': operations.SMSReserveSum,
     'SMSDelivered': operations.SMSDelivered,
     'SMSNotDelivered': operations.SMSNotDelivered,
-    'UndoTransaction': operations.UndoTransaction
+    'UndoTransaction': operations.UndoTransaction,
+    'clearWaitingTransactions': operations.clearWaitingTransactions
 }
 
 def do(**params):
