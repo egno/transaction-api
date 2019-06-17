@@ -5,7 +5,7 @@ def do(tr, params):
     tr.data = params
     tr.data['description'] = 'Списание суммы за доставленную SMS'
 
-    reservedId = params.get('reserveId')
+    reservedId = params.get('reservedId')
     if reservedId is None:
         tr.postTransaction()
     else:
@@ -31,21 +31,13 @@ def do(tr, params):
                                  'description': 'Возвращена ранее зарезервированная сумма', 'entry': entry['id'], 'transaction': tr.parent}
                              )
 
-    balance = tr.accountBalance('business', [
-        {'business': params['business']}
-    ])
-    if balance - Decimal(params['amount']) < 0:
-        tr.cancel()
-        res = {'message': 'Недостаточно суммы на ЛС'}
-        return(res)
-
     tr.postEntry(account='business',
                  amount=-params['amount'],
                  analytics={'business': params['business']},
                  data={'description':'Списана сумма за отправленную SMS'})
 
     tr.postEntry(account='business',
-                 amount=-params.get('unoCommission'),
+                 amount=-params.get('unoCommission',0),
                  analytics={'business': params['business']},
                  data={'description': 'Списана комиссия за услуги SMS'})
 
