@@ -79,7 +79,13 @@ def clear_transactions():
 
     return make_response(json.dumps(res, default=json_serial), 200, {'Content-Type': 'application/json'})
 
-
+@app.route('/waiting', methods=['GET'])
+def waiting():
+    res = query.do(type='WaitingTransactions')
+    try:
+        return make_response(json.dumps(res, default=json_serial), 200, {'Content-Type': 'application/json'})
+    except Exception as e:
+        return make_response(json.dumps({'error': "{0}".format(e)}), 400, {'Content-Type': 'application/json'})
 
 @app.route('/account/<business_id>', methods=['GET'])
 def balance(business_id):

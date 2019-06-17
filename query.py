@@ -2,10 +2,12 @@ from transaction import Transaction
 from decimal import Decimal
 
 import operations.CustomerAccountBalance
+import operations.WaitingTransactions
 
 
 operDict = {
-    'CustomerAccountBalance': operations.CustomerAccountBalance
+    'CustomerAccountBalance': operations.CustomerAccountBalance,
+    'WaitingTransactions': operations.WaitingTransactions
 }
 
 def do(**params):

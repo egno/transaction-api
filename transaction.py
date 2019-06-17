@@ -104,3 +104,11 @@ SELECT * from public.clear_waiting_transactions(%s);
         res = self.get(sql, values, all=True)
         print(res)
         return res
+
+    def getWaitingTansactions(self):
+        sql, values = ('''
+SELECT * from public.waiting_transactions;
+''', (0,))
+        res = self.get(sql, values, all=True)
+        print(res)
+        return res

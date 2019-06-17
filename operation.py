@@ -9,6 +9,7 @@ import operations.UndoTransaction
 import operations.clearWaitingTransactions
 
 
+
 operDict = {
     'CustomerPayment': operations.CustomerPayment,
     'SMSReserveSum': operations.SMSReserveSum,
