@@ -40,7 +40,7 @@ class Transaction(db.DBTransaction):
 
     def save(self):
         super().save()
-        return (self.transaction, self.entries)
+        return {'transaction': self.transaction, 'entries': self.entries}
 
     def postTransaction(self):
         parent = None

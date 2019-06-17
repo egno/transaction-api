@@ -38,14 +38,16 @@ def post_transaction():
     if data is None:
         raise ValueError("Transaction was not created")
 
-    transaction, entries = operation.do(**data)
+    res = operation.do(**data)
 
-    app.logger.info(f'Transaction: {transaction}, Entries: {entries}')
+    app.logger.info(f'Transaction: {res}')
+
+    transaction = res.get('transaction')
 
     if transaction is None or transaction.get('id', '') == '':
-        return make_response(json.dumps({'error': "Transaction was not created", 'details': transaction}), 400, {'Content-Type': 'application/json'})
+        return make_response(json.dumps({'error': "Transaction was not created", 'details': res}), 400, {'Content-Type': 'application/json'})
 
-    return make_response(json.dumps({'transaction': transaction, 'entries': entries}, default=json_serial), 200, {'Content-Type': 'application/json'})
+    return make_response(json.dumps(res, default=json_serial), 200, {'Content-Type': 'application/json'})
 
 
 @app.route('/transaction/<transaction_id>', methods=['DELETE'])
@@ -53,14 +55,16 @@ def undo_transaction(transaction_id):
 
     data = {'type': 'UndoTransaction', 'transactionId': transaction_id}
 
-    transaction, entries = operation.do(**data)
+    res = operation.do(**data)
 
-    app.logger.info(f'Transaction: {transaction}, Entries: {entries}')
+    app.logger.info(f'Transaction: {res}')
+    
+    transaction = res.get('transaction')
 
     if transaction is None or transaction.get('id', '') == '':
-        return make_response(json.dumps({'error': "Transaction was not created", 'details': transaction}), 400, {'Content-Type': 'application/json'})
+        return make_response(json.dumps({'error': "Transaction was not created", 'details': res}), 400, {'Content-Type': 'application/json'})
 
-    return make_response(json.dumps({'transaction': transaction, 'entries': entries}, default=json_serial), 200, {'Content-Type': 'application/json'})
+    return make_response(json.dumps(res, default=json_serial), 200, {'Content-Type': 'application/json'})
 
 @app.route('/clear', methods=['POST'])
 def clear_transactions():
