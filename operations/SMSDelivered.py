@@ -6,6 +6,7 @@ def do(tr, params):
     tr.data['description'] = 'Списание суммы за доставленную SMS'
 
     reservedId = params.get('reservedId')
+    reservedAmount = 0
     if reservedId is None:
         tr.postTransaction()
     else:
@@ -18,6 +19,7 @@ def do(tr, params):
             return(res)
         else:
             tr.parent = parentTransaction.get('id')
+            reservedAmount = parentTransaction.get('amount')
             tr.postTransaction()
             parentTransactionEntries = tr.getTransactionEntries()
 
@@ -32,7 +34,7 @@ def do(tr, params):
                              )
 
     tr.postEntry(account='business',
-                 amount=-params['amount'],
+                 amount=-reservedAmount,
                  analytics={'business': params['business']},
                  data={'description':'Списана сумма за отправленную SMS'})
 
