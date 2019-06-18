@@ -7,7 +7,7 @@ def do(tr, params):
     tr.status='waiting'
     balance = tr.accountBalance('business', [
         {'business': params['business']}])
-    if balance - Decimal(params['amount']) < 0:
+    if not params.get('business') is None and balance - Decimal(params['amount']) < 0:
         tr.cancel()
         res = {'message': 'Недостаточно суммы на ЛС'}
         return(res)
