@@ -19,7 +19,7 @@ def do(tr, params):
             return(res)
         else:
             tr.parent = parentTransaction.get('id')
-            reservedAmount = parentTransaction.get('amount')
+            reservedAmount = parentTransaction.get('j',{}).get('amount', 0)
             tr.postTransaction()
             parentTransactionEntries = tr.getTransactionEntries()
 
