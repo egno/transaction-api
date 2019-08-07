@@ -1,9 +1,19 @@
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import json
-from config import CONFIG as config
+from dotenv import load_dotenv
+import os
 
-DB_CONFIG = config['DB']
+load_dotenv()
+
+UNO_COMMISSION_PERCENT = float(os.getenv('PAYMENT_COMISSION', 0.0))
+
+DB_CONFIG = {
+    PGHOST: os.getenv('BILLING_DB_HOST'),
+    PGDATABASE: os.getenv('BILLING_DB_DATABASE'),
+    PGUSER: os.getenv('BILLING_DB_USER'),
+    PGPASSWORD: os.getenv('BILLING_DB_PASSWD')
+}
 
 
 class DBTransaction(object):
@@ -41,7 +51,6 @@ class DBTransaction(object):
         if self.conn is None:
             self.conn = psycopg2.connect(host=DB_CONFIG['PGHOST'], dbname=DB_CONFIG['PGDATABASE'],
                                          user=DB_CONFIG['PGUSER'], password=DB_CONFIG['PGPASSWORD'])
-            # print('open DBTransaction')
 
     def get(self, sql, params=(None,), all=False):
         with self.conn.cursor(cursor_factory=RealDictCursor) as cursor:
