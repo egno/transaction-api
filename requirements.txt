@@ -1,5 +1,1 @@
-Flask
-flask-cors
-requests
-gunicorn
 psycopg2-binary
