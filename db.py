@@ -9,10 +9,10 @@ load_dotenv()
 UNO_COMMISSION_PERCENT = float(os.getenv('PAYMENT_COMISSION', 0.0))
 
 DB_CONFIG = {
-    PGHOST: os.getenv('BILLING_DB_HOST'),
-    PGDATABASE: os.getenv('BILLING_DB_DATABASE'),
-    PGUSER: os.getenv('BILLING_DB_USER'),
-    PGPASSWORD: os.getenv('BILLING_DB_PASSWD')
+    'PGHOST': os.getenv('BILLING_DB_HOST'),
+    'PGDATABASE': os.getenv('BILLING_DB_DATABASE'),
+    'PGUSER': os.getenv('BILLING_DB_USER'),
+    'PGPASSWORD': os.getenv('BILLING_DB_PASSWD')
 }
 
 
