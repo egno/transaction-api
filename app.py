@@ -93,7 +93,24 @@ def balance(business_id):
     try:
         return make_response(json.dumps(res, default=json_serial), 200, {'Content-Type': 'application/json'})
     except Exception as e:
+        return make_response(json.dumps({'error': "{0}".format(e)}), 400, {'Content-Type': 'application/json'})@app.route('/account/<business_id>', methods=['GET'])
+
+@app.route('/account/<business_id>/operations', methods=['GET'])
+def operations(business_id):
+    res = query.do(type='AccountOperations', business=business_id)
+    try:
+        return make_response(json.dumps(res, default=json_serial), 200, {'Content-Type': 'application/json'})
+    except Exception as e:
         return make_response(json.dumps({'error': "{0}".format(e)}), 400, {'Content-Type': 'application/json'})
+
+@app.route('/account/<business_id>/operations/<date>', methods=['GET'])
+def operations_date(business_id, date):
+    res = query.do(type='AccountOperations', business=business_id, date=date)
+    try:
+        return make_response(json.dumps(res, default=json_serial), 200, {'Content-Type': 'application/json'})
+    except Exception as e:
+        return make_response(json.dumps({'error': "{0}".format(e)}), 400, {'Content-Type': 'application/json'})
+
 
 
 if __name__ == "__main__":

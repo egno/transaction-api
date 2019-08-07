@@ -77,6 +77,20 @@ where account = %s
 
         return self.get(sql, values)['balance'] or 0
 
+    def accountOperations(self, account, date=None):
+        sql, values = ('''
+select *
+from account_entries
+where business_id = %s
+''', (account,))
+        if not date is None:
+            sql += ' and ts <= %s '
+            values = values + (date,)
+        sql += ' order by ts desc limit 25'
+        print(sql, values)
+        
+        return self.get(sql, values, all=True)
+
     def getTransaction(self, id):
         res = self.get('''
 select t.* 
